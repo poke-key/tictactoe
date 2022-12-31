@@ -1,0 +1,127 @@
+#include <iostream>
+#include <stdio.h>
+using namespace std;
+#define TICSIZE 3
+
+class tictac {
+    private: 
+    int tictactoe[TICSIZE][TICSIZE];
+    int player; //if player = 0 then it is X, or else O
+    public: 
+        tictac() {
+            player = 0;
+            for(int i = 0; i < TICSIZE; i++) {
+                for(int j = 0; j < TICSIZE; j++) {
+                    tictactoe[i][j] = 0;
+                }
+            }
+        }
+
+        ~tictac() {}
+        int getplayer() {
+            return player;
+        }
+        void flipplayer() {
+            player ^= 1;
+        }
+
+        int CheckWinner() {
+            // Check for a horizontal win
+            for (int i = 0; i < TICSIZE; i++) {
+                if ( tictactoe[i][0] && tictactoe[i][0] == tictactoe[i][1] && tictactoe[i][1] == tictactoe[i][2]) {
+                    //return tictactoe[i][0];
+                     //cout << i << " 1 winner\n";
+                    return (1);
+                }
+            }
+
+            // Check for a vertical win
+            for (int i = 0; i < TICSIZE; i++) {
+                if ( tictactoe[0][i] && tictactoe[0][i] == tictactoe[1][i] && tictactoe[1][i] == tictactoe[2][i]) {
+                //return tictactoe[0][i];
+                 //cout << "2 winner\n";
+                    return (1);
+                }
+            }
+
+            // Check for a diagonal win
+            if (tictactoe[0][0] && tictactoe[0][0] == tictactoe[1][1] && tictactoe[1][1] == tictactoe[2][2]) {
+                    //cout << tictactoe[0][0] << " " << tictactoe[1][1] << " " << tictactoe[2][2] << "\n";
+                    return (1);
+            }
+            if (tictactoe[0][2] && tictactoe[0][2] == tictactoe[1][1] && tictactoe[1][1] == tictactoe[2][0]) {
+                //return tictactoe[0][2];
+                 //cout << "3 winner\n";
+                    return (1);
+            }
+
+            // No winner yet
+            //cout << "No winner\n";
+            return (0);
+        }
+        int play() {
+            int row;
+            int column;
+
+            cout << "input a row: ";
+            cin >> row;
+            cout << "input a column: ";
+            cin >> column;
+
+            if( (row > 2 || row < 0) || ( column > 2 || column < 0)) {
+                cout << "invlaid position, please try again.\n";
+                return (0);
+            }
+            if(tictactoe[row][column] != 0) {
+                cout << "position already played, please try again.\n";
+                return (0);
+            }
+
+            if(!player) {
+                tictactoe[row][column] = 1;
+            } 
+            else {
+                tictactoe[row][column] = 2;
+            }
+
+           //check if game is finished
+            return(CheckWinner());
+        }
+
+        void print() {
+            cout << "+---+\n";
+            for(int i = 0; i < TICSIZE; i++) {
+                cout << "|";
+                for(int j = 0; j < TICSIZE; j++) {
+                    switch (tictactoe[i][j]) {
+                        case 0:
+                            cout << "-";
+                            break;
+                        case 1:
+                            cout << "X";
+                            break;
+                        case 2:
+                            cout << "O";
+                            break;
+                    } 
+                }
+                cout << "|\n";
+                
+            }
+            cout << "+---+\n";
+        };
+};
+
+int main() {
+
+    tictac mytictac;
+    while (1) {
+        mytictac.print();
+        if(mytictac.play()) {
+            cout << (mytictac.getplayer()?'O':'X') << " is the winner!\n";
+            mytictac.print();
+            break;
+        }
+        mytictac.flipplayer();
+    }
+}
